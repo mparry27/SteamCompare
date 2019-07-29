@@ -1,0 +1,30 @@
+﻿<Window x:Class="SteamCompare.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SteamCompare"
+        mc:Ignorable="d"
+        Title="GameComapre" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="163*"/>
+            <ColumnDefinition Width="481*"/>
+            <ColumnDefinition Width="43*"/>
+            <ColumnDefinition Width="106*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="txtSearch" Height="23" Margin="81.3,34,120,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button x:Name="btnSearch" Content="Search" HorizontalAlignment="Right" Margin="0,34,30,0" VerticalAlignment="Top" Width="85" Height="26" Grid.Column="1"/>
+        <Rectangle Fill="#FFF4F4F5" Margin="-94.7,83,0,49" Stroke="Black" Grid.Column="1" HorizontalAlignment="Left" Width="289"/>
+        <Rectangle Fill="#FFF4F4F5" Margin="224.3,83,-9.8,49" Stroke="Black" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <Label x:Name="label" Content="STEAM" HorizontalAlignment="Left" Margin="5.3,97,0,0" VerticalAlignment="Top" FontSize="22" Grid.Column="1"/>
+        <Label x:Name="label1" Content="GoG" HorizontalAlignment="Right" Margin="0,97,73,0" VerticalAlignment="Top" FontSize="24" RenderTransformOrigin="1.033,0.868" Grid.Column="1"/>
+        <Label x:Name="lblSteamGameName" Content="steamGameName" HorizontalAlignment="Left" Margin="-20.7,156,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Label x:Name="lblGogGameName" Content="gogGameName" HorizontalAlignment="Right" Margin="0,156,55,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Label x:Name="lblSteamPrice" Content="steamPrice" HorizontalAlignment="Left" Margin="-64.7,0,0,137" VerticalAlignment="Bottom" FontSize="48" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment"/>
+        <Label x:Name="lblGogPrice" Content="gogPrice" HorizontalAlignment="Left" Margin="283.3,0,0,137" VerticalAlignment="Bottom" FontSize="48" Grid.Column="1"/>
+        <Button x:Name="btnSteamStorePage" Content="steamStorePage" HorizontalAlignment="Left" Margin="-34.7,0,0,75" VerticalAlignment="Bottom" Width="168" Grid.Column="1"/>
+        <Button x:Name="btnGogStorePage" Content="gogStorePage" HorizontalAlignment="Right" Margin="0,0,30,75" VerticalAlignment="Bottom" Width="150" Grid.Column="1"/>
+
+    </Grid>
+</Window>
