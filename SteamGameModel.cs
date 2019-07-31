@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace SteamCompare
 {
-    class Game
+    public class SteamGameModel
     {
-        public int id { get; set; }
         public string name { get; set; }
+        public int steam_appid { get; set; }
+        public double final { get; set; }
     }
 }
