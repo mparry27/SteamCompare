@@ -12,20 +12,29 @@ namespace SteamCompare
     {
         public static async Task<SteamGameModel> LoadGame(string gameName)
         {
-            string gameList = "http://api.steampowered.com/ISteamApps/GetAppList/v2/";
-            var appList = JsonConvert.DeserializeObject<Dictionary<string, SteamGameResultModel>>(await response.Content.ReadAsStringAsync());
+            string urlApplist = "http://api.steampowered.com/ISteamApps/GetAppList/v2/";
+            //string urlGame = "https://store.steampowered.com/api/appdetails/?appids=";
+            int appID = 140;
 
-            int appID = 253230;
-            string url = $"https://store.steampowered.com/api/appdetails/?appids={appID}";
+            using (HttpResponseMessage response = await ApiHelper.apiClient.GetAsync(urlApplist))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    //var root = JsonConvert.DeserializeObject<SteamApplistResultModel>(await response.Content.ReadAsStringAsync());
+                    //var dict = root.applist.apps.ToDictionary(x => x.appid, x => x.name);
+                }
+                else
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
 
-            using (HttpResponseMessage response = await ApiHelper.apiClient.GetAsync(url))
+            using (HttpResponseMessage response = await ApiHelper.apiClient.GetAsync(urlGame))
             {
                 if (response.IsSuccessStatusCode)
                 {
                     var dict = JsonConvert.DeserializeObject<Dictionary<string, SteamGameResultModel >>(await response.Content.ReadAsStringAsync());
-                    d
                     SteamGameResultModel gameData = dict[appID.ToString()];
-                    //SteamGameResultModel result = await response.Content.ReadAsAsync<SteamGameResultModel>();
                     return gameData.Data;
                 }
                 else
