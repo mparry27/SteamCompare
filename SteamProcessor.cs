@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -9,9 +10,11 @@ namespace SteamCompare
 {
     public class SteamProcessor
     {
-        public static async Task<SteamGameModel> LoadGame(string gameName = "")
+        public static async Task<SteamGameModel> LoadGame(string gameName)
         {
-            string appList = "http://api.steampowered.com/ISteamApps/GetAppList/v2/";
+            string gameList = "http://api.steampowered.com/ISteamApps/GetAppList/v2/";
+            var appList = JsonConvert.DeserializeObject<Dictionary<string, SteamGameResultModel>>(await response.Content.ReadAsStringAsync());
+
             int appID = 253230;
             string url = $"https://store.steampowered.com/api/appdetails/?appids={appID}";
 
@@ -19,8 +22,11 @@ namespace SteamCompare
             {
                 if (response.IsSuccessStatusCode)
                 {
-                    SteamGameResultModel result = await response.Content.ReadAsAsync<SteamGameResultModel>();
-                    return result.Data;
+                    var dict = JsonConvert.DeserializeObject<Dictionary<string, SteamGameResultModel >>(await response.Content.ReadAsStringAsync());
+                    d
+                    SteamGameResultModel gameData = dict[appID.ToString()];
+                    //SteamGameResultModel result = await response.Content.ReadAsAsync<SteamGameResultModel>();
+                    return gameData.Data;
                 }
                 else
                 {
