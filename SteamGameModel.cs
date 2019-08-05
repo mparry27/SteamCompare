@@ -10,6 +10,6 @@ namespace SteamCompare
     {
         public string name { get; set; }
         public int steam_appid { get; set; }
-        public double final { get; set; }
+        public SteamPriceModel price_overview { get; set; }
     }
 }

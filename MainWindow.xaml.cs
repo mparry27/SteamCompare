@@ -36,6 +36,7 @@ namespace SteamCompare
         {
             var game = await SteamProcessor.LoadGame(txtSearch.Text);
             lblSteamGameName.Content = game.name;
+            lblSteamPrice.Content = game.price_overview.final_formatted;
         }
     }
 }
