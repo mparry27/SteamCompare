@@ -35,8 +35,14 @@ namespace SteamCompare
         private async Task LoadGame()
         {
             var game = await SteamProcessor.LoadGame(txtSearch.Text);
-            lblSteamGameName.Content = game.name;
-            lblSteamPrice.Content = game.price_overview.final_formatted;
+            if (game != null)
+            {
+                lblSteamGameName.Content = game.name;
+                lblSteamPrice.Content = game.price_overview.final_formatted;
+            } else
+            {
+                MessageBox.Show("Couldn't find game: " + txtSearch.Text);
+            }
         }
     }
 }

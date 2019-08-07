@@ -20,14 +20,13 @@ namespace SteamCompare
                 {
                     var root = JsonConvert.DeserializeObject<SteamApplistResultModel>(await response.Content.ReadAsStringAsync());
                     var dict = root.applist.apps.ToDictionary(x => x.appid, x => x.name);
-                    SteamGameResultModel gameData = dict[appID.ToString()];
-                    return gameData.Data;
                 }
                 else
                 {
                     throw new Exception(response.ReasonPhrase);
                 }
             }
+            return null;
         }
     }
 }
