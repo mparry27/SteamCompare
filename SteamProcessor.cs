@@ -14,7 +14,8 @@ namespace SteamCompare
             string urlApplist = "http://api.steampowered.com/ISteamApps/GetAppList/v2/";
             string urlGame = "https://store.steampowered.com/api/appdetails/?appids=";
             SteamApplistResultModel root;
-            Queue<SteamApp> appQueue;
+            Stack<SteamApp> appStack;
+            bool updated = false;
             try
             {
                 root = JsonConvert.DeserializeObject<SteamApplistResultModel>(File.ReadAllText(@"..\..\SteamAppList.json"));
@@ -31,6 +32,7 @@ namespace SteamCompare
                             JsonSerializer serializer = new JsonSerializer();
                             serializer.Serialize(file, root);
                         }
+                        updated = true;
                     }
                     else
                     {
@@ -39,22 +41,29 @@ namespace SteamCompare
                 }
             }
 
-            appQueue = new Queue<SteamApp>(root.applist.apps.FindAll(x => x.name.Contains(gameName)));
-            while (appQueue.Count != 0)
+            appStack = new Stack<SteamApp>(root.applist.apps.FindAll(x => x.name.ToLower().Contains(gameName.ToLower())));
+
+            while (appStack.Count > 0)
             {
-                urlGame = urlGame + appQueue.Peek().appid;
-                using (HttpResponseMessage response = await ApiHelper.apiClient.GetAsync(urlGame))
+                using (HttpResponseMessage response = await ApiHelper.apiClient.GetAsync(urlGame+appStack.Peek().appid.ToString()))
                 {
                     if (response.IsSuccessStatusCode)
                     {
                         var dict = JsonConvert.DeserializeObject<Dictionary<string, SteamGameResultModel>>(await response.Content.ReadAsStringAsync());
-                        SteamGameResultModel gameData = dict[appQueue.Peek().appid.ToString()];
-                        return gameData.Data;
+                        if (dict[appStack.Peek().appid.ToString()].Data != null && dict[appStack.Peek().appid.ToString()].Data.type == "game")
+                        {
+                            SteamGameResultModel gameData = dict[appStack.Peek().appid.ToString()];
+                            if (gameData.Data.price_overview == null)
+                            {
+                                gameData.Data.price_overview = new SteamPriceModel();
+                                gameData.Data.price_overview.final_formatted = "FREE";
+                            }
+                            return gameData.Data;
+                        }
+                        appStack.Pop();
                     }
                     else
-                    {
-                        appQueue.Dequeue();
-                    }
+                        appStack.Pop();
                 }
             }
             return null;
