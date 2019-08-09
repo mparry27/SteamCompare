@@ -36,8 +36,13 @@ namespace SteamCompare
                 GogSearchModel gameData = searchStack.Pop();
                 if (gameData.type == 1)
                 {
+                    if (gameData.price.finalAmount == "0.00")
+                        gameData.price.finalAmount = "FREE";
+                    else
+                        gameData.price.finalAmount = "$" + gameData.price.finalAmount;
                     return gameData;
                 }
+                
             }
             return null;
         }

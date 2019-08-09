@@ -12,5 +12,6 @@ namespace SteamCompare
         public string title { get; set; }
         public int type { get; set; }
         public int id { get; set; }
+        public string image { get; set; }
     }
 }

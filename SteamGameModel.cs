@@ -13,5 +13,6 @@ namespace SteamCompare
         public string type { get; set; }
         public bool is_free { get; set; }
         public SteamPriceModel price_overview { get; set; }
+        public string header_image { get; set; }
     }
 }

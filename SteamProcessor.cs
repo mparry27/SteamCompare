@@ -13,14 +13,37 @@ namespace SteamCompare
         {
             string urlApplist = "http://api.steampowered.com/ISteamApps/GetAppList/v2/";
             string urlGame = "https://store.steampowered.com/api/appdetails/?appids=";
-            SteamApplistResultModel root;
-            Stack<SteamApp> appStack;
+            SteamApplistResultModel root = null;
             bool updated = false;
             try
             {
                 root = JsonConvert.DeserializeObject<SteamApplistResultModel>(File.ReadAllText(@"..\..\SteamAppList.json"));
             }
-            catch (FileNotFoundException ex)
+            catch (FileNotFoundException)
+            {
+                UpdateAppList();
+            }
+            Stack<SteamApp> appList = new Stack<SteamApp>(root.applist.apps.FindAll(x => x.name.ToLower().Contains(gameName.ToLower())));
+            SteamGameResultModel game = await SearchAppList(appList);
+
+            if (game != null)
+                return game.Data;
+            else if (!updated)
+            {
+                UpdateAppList();
+                appList = new Stack<SteamApp>(root.applist.apps.FindAll(x => x.name.ToLower().Contains(gameName.ToLower())));
+                game = await SearchAppList(appList);
+                if (game != null)
+                    return game.Data;
+                else
+                    return null;
+            }
+            else
+            {
+                return null;
+            }
+
+            async void UpdateAppList()
             {
                 using (HttpResponseMessage response = await ApiHelper.apiClient.GetAsync(urlApplist))
                 {
@@ -41,32 +64,33 @@ namespace SteamCompare
                 }
             }
 
-            appStack = new Stack<SteamApp>(root.applist.apps.FindAll(x => x.name.ToLower().Contains(gameName.ToLower())));
-
-            while (appStack.Count > 0)
+            async Task<SteamGameResultModel> SearchAppList(Stack<SteamApp> appStack)
             {
-                using (HttpResponseMessage response = await ApiHelper.apiClient.GetAsync(urlGame+appStack.Peek().appid.ToString()))
+                while (appStack.Count > 0)
                 {
-                    if (response.IsSuccessStatusCode)
+                    using (HttpResponseMessage response = await ApiHelper.apiClient.GetAsync(urlGame + appStack.Peek().appid.ToString()))
                     {
-                        var dict = JsonConvert.DeserializeObject<Dictionary<string, SteamGameResultModel>>(await response.Content.ReadAsStringAsync());
-                        if (dict[appStack.Peek().appid.ToString()].Data != null && dict[appStack.Peek().appid.ToString()].Data.type == "game")
+                        if (response.IsSuccessStatusCode)
                         {
-                            SteamGameResultModel gameData = dict[appStack.Peek().appid.ToString()];
-                            if (gameData.Data.price_overview == null)
+                            var dict = JsonConvert.DeserializeObject<Dictionary<string, SteamGameResultModel>>(await response.Content.ReadAsStringAsync());
+                            if (dict[appStack.Peek().appid.ToString()].Data != null && dict[appStack.Peek().appid.ToString()].Data.type == "game")
                             {
-                                gameData.Data.price_overview = new SteamPriceModel();
-                                gameData.Data.price_overview.final_formatted = "FREE";
+                                SteamGameResultModel gameData = dict[appStack.Peek().appid.ToString()];
+                                if (gameData.Data.price_overview == null)
+                                {
+                                    gameData.Data.price_overview = new SteamPriceModel();
+                                    gameData.Data.price_overview.final_formatted = "FREE";
+                                }
+                                return gameData;
                             }
-                            return gameData.Data;
+                            appStack.Pop();
                         }
-                        appStack.Pop();
+                        else
+                            appStack.Pop();
                     }
-                    else
-                        appStack.Pop();
                 }
+                return null;
             }
-            return null;
         }
     }
 }
