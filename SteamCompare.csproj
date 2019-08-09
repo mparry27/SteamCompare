@@ -70,14 +70,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ApiHelper.cs" />
-    <Compile Include="GogGameModel.cs" />
     <Compile Include="GogProcessor.cs" />
     <Compile Include="SteamApp.cs" />
+    <Compile Include="GogSearchModel.cs" />
     <Compile Include="SteamApplistModel.cs" />
     <Compile Include="GogSearchResultModel.cs" />
     <Compile Include="SteamGameModel.cs" />
     <Compile Include="SteamApplistResultModel.cs" />
     <Compile Include="SteamGameResultModel.cs" />
+    <Compile Include="GogPriceModel.cs" />
     <Compile Include="SteamPriceModel.cs" />
     <Compile Include="SteamProcessor.cs" />
     <Compile Include="MainWindow.xaml.cs">

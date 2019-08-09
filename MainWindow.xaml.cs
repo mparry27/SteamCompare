@@ -30,19 +30,25 @@ namespace SteamCompare
         private async void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
             await LoadGame();
+
         }
 
         private async Task LoadGame()
         {
-            var game = await SteamProcessor.LoadGame(txtSearch.Text);
-            if (game != null)
+            var steamGame = await SteamProcessor.LoadGame(txtSearch.Text);
+            var gogGame = await GogProcessor.LoadGame(txtSearch.Text);
+            if (steamGame != null)
             {
-                lblSteamGameName.Content = game.name;
-                lblSteamPrice.Content = game.price_overview.final_formatted;
-            } else
+                lblSteamGameName.Content = steamGame.name;
+                lblSteamPrice.Content = steamGame.price_overview.final_formatted;
+            }
+            if (gogGame != null)
             {
-                MessageBox.Show("Couldn't find game: " + txtSearch.Text);
+                lblGogGameName.Content = gogGame.title;
+                lblGogPrice.Content = "$"+gogGame.price.finalAmount;
             }
         }
+
+
     }
 }

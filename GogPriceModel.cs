@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace SteamCompare
 {
-    public class GogGameModel
+    public class GogPriceModel
     {
-
+        public string baseAmount { get; set; }
+        public string finalAmount { get; set; }
     }
 }

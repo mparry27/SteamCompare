@@ -8,6 +8,6 @@ namespace SteamCompare
 {
     public class GogSearchResultModel
     {
-        public SteamApplistModel applist { get; set; }
+        public List<GogSearchModel> products { get; set; }
     }
 }
